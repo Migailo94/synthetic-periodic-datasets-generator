@@ -2,29 +2,25 @@
 """
 Created on Thu Jul 30 08:03:06 2020
 
-@author: Asus
+@author: Migailo Giuseppe
 """
 import numpy as np
 import pandas as pd
-#import string
-#import random
 from sklearn.preprocessing import KBinsDiscretizer
 
-seed = 10 # seed random
+seed = 10 # random seed
 
-num_blocks = 3 # numbero di blocchi
+num_blocks = 40 # number of blocks
 
-num_transactions_per_block = 100 # numero di transizioni per blocco
+num_transactions_per_block = 50 # number of transactions per block
 
-k = 4 # numero di classi (feature)
+k = 3 # # number of features
 
 np.random.seed(seed)
 
-periodicity = np.random.randint(1,5,k) # array dei coeficenti m della k funzioni seno per generare le k feature
+periodicity = np.random.randint(1,5,k) # array of the k sine functions to generate the k features
 
-print(periodicity)
-
-blokSize = 5 # blokSize di jKarma
+blokSize = 10 # jKarma's blokSize
 
 num_bins = int(((num_blocks * num_transactions_per_block)/3*k)) # numero di bins
 
@@ -55,12 +51,6 @@ for row in temp_data:
         temp_str = temp_str + str(col) + " "
     data[i] = temp_str.strip()
     i = i + 1
-
-'''    
-columns = ["" for x in range(k)]
-for i in range(k):
-    columns[i] = random.choice(string.ascii_uppercase)
-'''
 
 dataset = pd.DataFrame(data, columns=["Transactions"])
 

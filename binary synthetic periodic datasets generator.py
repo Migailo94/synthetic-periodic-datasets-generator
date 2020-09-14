@@ -2,7 +2,7 @@
 """
 Created on Mon Aug  3 12:25:13 2020
 
-@author: Asus
+@author: Migailo Giuseppe
 """
 
 import numpy as np
@@ -10,24 +10,21 @@ import pandas as pd
 import string
 import random
 
-seed = 10 # seed random
+seed = 10 # random seed
 
-num_blocks = 40 # numbero di blocchi
+num_blocks = 40 # number of blocks
 
-num_transactions_per_block = 50 # numero di transizioni per blocco
+num_transactions_per_block = 50 # number of transactions per block
 
-k = 3 # numero di classi (feature)
+k = 3 # number of features
 
 np.random.seed(seed)
 
-periodicity = np.random.randint(1,5,k) # array dei coeficenti m della k funzioni seno per generare le k feature
+periodicity = np.random.randint(1,5,k) # array of the k sine functions to generate the k features
 
-#print(periodicity)
-
-blokSize = 10 # blokSize di jKarma
+blokSize = 10 # jKarma's blokSize
 
 temp_data = np.zeros((num_blocks * num_transactions_per_block, k))
-#temp_data = temp_data.astype(str)
 
 data = np.zeros((num_blocks * num_transactions_per_block))
 data = data.astype(str)
@@ -38,47 +35,35 @@ columns = ["" for x in range(k)]
 for i in range(k):
     columns[i] = random.choice(string.ascii_uppercase)
 
-#print(columns)
-
 c = 0
+t = 0
+s = np.zeros((num_blocks * num_transactions_per_block))
 for i in range(num_blocks):
     for j in range(num_transactions_per_block):
         for l in range(len(periodicity)):
             if j % periodicity[l] == 1:
                 temp_data[c][l] = 1
+                t = t + 1
             else:
                 temp_data[c][l] = 0
+        s[c] = t
+        t = 0
         c = c + 1
     periodicity = periodicity + np.random.randint(1,5,k)
-    
-#print(temp_data)
+
+print(s)
 
 i = 0
 for row in temp_data:
     temp_str = ""
     for c,col in enumerate(row):
         if col == 1:
-             temp_str = temp_str + columns[c] + " "
+            temp_str = temp_str + columns[c] + " "
     data[i] = temp_str.strip()
     i = i + 1
 
-#data = [(d or '0') for d in data]
 
-''' 
-c = 0
-for i in range(num_blocks):
-    for j in range(num_transactions_per_block):
-        temp_str = ""
-        for l in range(len(periodicity)):
-            if j % periodicity[l] == 1:
-                temp_data[c][l] = columns[l] + '1'
-            else:
-                temp_data[c][l] = columns[l] + '0'
-            temp_str = temp_str + temp_data[c][l] + " "
-        data[c] = temp_str.strip()
-        c = c + 1
-    periodicity = periodicity + np.random.randint(1,5,k)
-'''
+print(np.sum(s)/(num_blocks * num_transactions_per_block))
 
 startblokSize = blokSize
 for i in range(len(groud_truth)):
@@ -88,9 +73,6 @@ for i in range(len(groud_truth)):
     else:
         groud_truth[i] = 1
         blokSize = startblokSize + startblokSize
-        
-#print(data)
-#print(groud_truth)
 
 dataset = pd.DataFrame(data, columns=["Transactions"])
 
@@ -98,7 +80,7 @@ dataset['Timestamp'] = pd.date_range(start='1/2/2019 09:00:00', periods = len(da
 
 dataset = dataset[['Timestamp' , "Transactions"]]
 
-dataset.to_csv("dataset.csv", sep = ";", index = False, encoding = 'utf-8-sig')
+dataset.to_csv("dataset 5.csv", sep = ";", index = False, encoding = 'utf-8-sig')
 
 np.savetxt("groudtruth", groud_truth, fmt='%1d')
 
